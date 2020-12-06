@@ -1,12 +1,8 @@
 import itertools
-from collections import Counter
-
-lines = open("puzzle6.txt","r").readlines()
 
 print("-----------Part 1-----------")
 groups, group  = [], []
-# had to add 2 empty lines at the end of the txt file else the count is off by 1
-for line in lines:
+for line in open("puzzle6.txt","r"):
     if line in ['\n', '\r\n']:
         groups.append(group)
         group = []
@@ -14,11 +10,13 @@ for line in lines:
         group.append(line.strip())
 groups.append(group)
 
-def count_group(group):
+def make_set(group):
     words = [list(word) for word in group]
     letters = list(itertools.chain(*words))
-    c = Counter(letters)
-    return sum([len(c.items())])
+    return set(letters)
+
+def count_group(group):
+    return sum([len(make_set(group))])
 
 print(sum([count_group(g) for g in groups]))
 
@@ -26,10 +24,7 @@ print("-----------Part 2-----------")
 
 def count2_group(group):
     l = len(group)
-    words = [list(word) for word in group]
-    letters = list(itertools.chain(*words))
-    count = Counter(letters)
-    s = sum([x == l for x in count.values()])
-    return s
+    count = make_set(group)
+    return sum([1 for x in count.values() if x == l])
 
 print(sum([count2_group(g) for g in groups]))
