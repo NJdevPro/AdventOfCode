@@ -4,7 +4,7 @@ print("-----------Part 1-----------")
 from collections import Counter
 import itertools
 
-record, records  = [], []
+records  = []
 record = {}
 for line in lines:
     if line in ['\n', '\r\n']:
