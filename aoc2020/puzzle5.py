@@ -17,7 +17,6 @@ for bpass in boarding_passes:
     seat = rownum(bpass[:7]) * 8 + colnum(bpass[7:])
     seats.append(seat)
     maxseat = max(seat, maxseat)
-
 print(maxseat)
 
 print("-----------Part 2-----------")
