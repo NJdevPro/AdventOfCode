@@ -3,19 +3,12 @@ import re
 print("-----------Part 1-----------")
 contains = {}
 for line in open("puzzle7.txt","r"):
-    # bright indigo bags contain 4 shiny turquoise bags, 3 wavy yellow bags.
-    m = re.split(" bags contain ", line.strip())
-    bags = m[1].replace(" bags", '').replace(".", '').replace(" bag", '').replace('no other', '0 other'). split(', ')
-    pairs = [bag.split(' ', maxsplit=1) for bag in bags]
-    children = [(int(child[0]), child[1]) for child in pairs]
-    contains[m[0]] = children
-
+    color = re.match('(.+?) bags', line).group(1)
+    contains[color] = re.findall('(\d+) (.+?) bag', line)
 
 def find_parents(child):
     parents = set()
-    for k,v in contains.items():
-        if child in [color for (number, color) in v]:
-            parents.add(k)
+    [parents.add(k) for k,v in contains.items() if child in [color for number, color in v]]
     parents.discard(child) # prevent infinite recursion
     return parents
 
