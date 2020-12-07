@@ -22,8 +22,6 @@ for r in records:
         bad.append(r)
 print("good=", len(good))
 print("bad=", len(bad))
-#print(good)
-#print(bad)
 
 print("-----------Part 2------------")
 good, bad = [], []
@@ -37,5 +35,3 @@ for r in records:
         bad.append(r)
 print("good=", len(good))
 print("bad=", len(bad))
-print(good)
-print(bad)
