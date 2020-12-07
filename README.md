@@ -1,3 +1,3 @@
 # AdventoOfCode
 
-My (cleaned up) solutions to Advent of Code
+My (more or less cleaned up) solutions to Advent of Code
