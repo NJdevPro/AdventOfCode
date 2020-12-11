@@ -22,8 +22,6 @@ def king(seats, i, j, inc_i, inc_j):
     j += inc_j
     if seats[i][j] == '#':
         return 1
-    if seats[i][j] == 'L':
-        return 0
     return 0
 
 def iterate(seats, tolerance, move):
