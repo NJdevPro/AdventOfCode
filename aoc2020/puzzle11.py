@@ -1,8 +1,16 @@
+import itertools as it
 import copy
 
 lines =  open("puzzle11.txt","r").read().splitlines()
 
 # Part 1
+empty_row = ['X'] * (len(lines[0]) + 2)
+seats = []
+seats.append(empty_row)
+[seats.append(['X'] + list(line) + ['X']) for line in lines]
+seats.append(empty_row[:])
+
+width, height = len(seats[0]) - 1, len(seats) - 1
 increments = [(-1, 0), (1,0), (0, -1), (0,1), (-1, -1), (-1, 1), (1,-1), (1,1)]
 
 def count_adjacents(seats, i, j, move):
@@ -20,8 +28,8 @@ def king(seats, i, j, inc_i, inc_j):
 
 def iterate(seats, tolerance, move):
     new_seats = copy.deepcopy(seats)
-    for i in range(1, len(seats)-1):
-        for j in range(1, len(seats[0])-1):
+    for i in range(1, height):
+        for j in range(1, width):
             seat = seats[i][j]
             if seat == '#':
                 c = count_adjacents(seats, i, j, move)
@@ -35,12 +43,6 @@ def iterate(seats, tolerance, move):
 
 def occupied(room):
     return sum([row.count('#') for row in room])
-
-empty_row = ['X'] * (len(lines[0]) + 2)
-seats = []
-seats.append(empty_row)
-[seats.append(['X'] + list(line) + ['X']) for line in lines]
-seats.append(empty_row[:])
 
 def run(part, tolerance, move):
     print("---------- Part {} -----------".format(part))
@@ -56,9 +58,6 @@ def run(part, tolerance, move):
         i+=1
 
 # Part 2
-width = len(seats[0]) - 1
-height = len(seats) - 1
-
 # move like a chess queen
 def queen(seats, i, j, inc_i, inc_j):
     i += inc_i
