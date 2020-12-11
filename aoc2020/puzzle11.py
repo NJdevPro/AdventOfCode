@@ -4,16 +4,16 @@ import copy
 lines =  open("puzzle11.txt","r").read().splitlines()
 
 print("---------- Part 1 -----------")
-cc = {'#':1, '.':0, 'L':0}
-def count_adj(c, i, j):
-    TL = cc[c[i-1][j-1]]
-    T = cc[c[i-1][j]]
-    TR = cc[c[i-1][j+1]]
-    L = cc[c[i][j-1]]
-    R = cc[c[i][j+1]]
-    BL = cc[c[i+1][j-1]]
-    B = cc[c[i+1][j]]
-    BR = cc[c[i+1][j+1]]
+val = {'#':1, '.':0, 'L':0, 'X':0}
+def count_adj(seat, i, j):
+    TL = val[seat[i-1][j-1]]
+    T = val[seat[i-1][j]]
+    TR = val[seat[i-1][j+1]]
+    L = val[seat[i][j-1]]
+    R = val[seat[i][j+1]]
+    BL = val[seat[i+1][j-1]]
+    B = val[seat[i+1][j]]
+    BR = val[seat[i+1][j+1]]
     return TL + T + TR + L + R + BL + B + BR
 
 def iterate(seats, tolerance):
@@ -32,18 +32,12 @@ def iterate(seats, tolerance):
     return new_seats
 
 def occupied(room):
-    c = 0
-    for i in range(1, len(seats)-1):
-        for j in range(1, len(seats[0])-1):
-            if room[i][j] == '#':
-                c+=1
-    return c
+    return sum([row.count('#') for row in room])
 
-empty_row = ['.']*(len(lines[0])+2)
+empty_row = ['X'] * (len(lines[0]) + 2)
 seats = []
 seats.append(empty_row)
-for j,line in enumerate(lines):
-    seats.append(['.'] + list(line) + ['.'])
+[seats.append(['X'] + list(line) + ['X']) for line in lines]
 seats.append(empty_row[:])
 
 # last_room = copy.deepcopy(seats)
@@ -59,32 +53,32 @@ seats.append(empty_row[:])
 
 print("---------- Part 2 -----------")
 
-# "I moved on her like a chess queen" / Ronald J. Frump
-def queen(seat, m, n, inc_i, inc_j, limit_m, limit_n):
-    i, j = m, n
-    i += inc_i
-    j += inc_j
-    while ( 1 <= i <= limit_m and 1 <= j <= limit_n ):
-        if seat[i][j] == '#':
-            return 1
-        if  seat[i][j] == 'L':
-            return 0
-        i += inc_i
-        j += inc_j
-    return 0
-
 def count_adj2(seats, i, j):
     width = len(seats[0])-1
     height = len(seats)-1
     limit = min(width, height)
-    T = queen(seats, i, j, -1, 0, height, width)
-    B = queen(seats, i, j, +1, 0, height, width)
-    L = queen(seats, i, j, 0, -1, height, width)
-    R = queen(seats, i, j, 0, +1, height, width)
-    TL = queen(seats, i, j, -1, -1, limit, limit)
-    TR = queen(seats, i, j, -1, +1, limit, limit)
-    BL = queen(seats, i, j, +1, -1, limit, limit)
-    BR = queen(seats, i, j, +1, +1, limit, limit)
+
+    def queen(m, n, inc_i, inc_j):
+        i, j = m, n
+        i += inc_i
+        j += inc_j
+        while (1 <= i <= height and 1 <= j <= width):
+            if seats[i][j] == '#':
+                return 1
+            if seats[i][j] == 'L':
+                return 0
+            i += inc_i
+            j += inc_j
+        return 0
+
+    T = queen(i, j, -1, 0)
+    B = queen(i, j, +1, 0)
+    L = queen(i, j, 0, -1)
+    R = queen(i, j, 0, +1)
+    TL = queen(i, j, -1, -1)
+    TR = queen(i, j, -1, +1)
+    BL = queen(i, j, +1, -1)
+    BR = queen(i, j, +1, +1)
     return TL + T + TR + L + R + BL + B + BR
 
 def iterate2(seats, tolerance):
