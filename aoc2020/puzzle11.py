@@ -6,7 +6,6 @@ lines =  open("puzzle11.txt","r").read().splitlines()
 # Part 1
 increments = [(-1, 0), (1,0), (0, -1), (0,1), (-1, -1), (-1, 1), (1,-1), (1,1)]
 
-val = {'#':1, '.':0, 'L':0, 'X':0}
 def count_adjacents(seats, i, j, move):
     return sum([move(seats, i, j, dx, dy) for (dx, dy) in increments])
 
