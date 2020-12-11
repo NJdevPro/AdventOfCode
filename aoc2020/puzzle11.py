@@ -40,26 +40,27 @@ seats.append(empty_row)
 [seats.append(['X'] + list(line) + ['X']) for line in lines]
 seats.append(empty_row[:])
 
-# last_room = copy.deepcopy(seats)
-# i=1
-# while True:
-#     new_room = iterate(last_room, 4)
-#     #[print(j, sep='\n') for j in new_room]
-#     if new_room == last_room:
-#         print('iteration ', i - 1, ', occupied: ', occupied(last_room))
-#         break
-#     last_room = new_room
-#     i+=1
+last_room = copy.deepcopy(seats)
+i=1
+while True:
+    new_room = iterate(last_room, 4)
+    #[print(j, sep='\n') for j in new_room]
+    if new_room == last_room:
+        print('iteration ', i - 1, ', occupied: ', occupied(last_room))
+        break
+    last_room = new_room
+    i+=1
 
 print("---------- Part 2 -----------")
+
+increments = [(-1, 0), (1,0), (0, -1), (0,1), (-1, -1), (-1, 1), (1,-1), (1,1)]
 
 def count_adj2(seats, i, j):
     width = len(seats[0])-1
     height = len(seats)-1
     limit = min(width, height)
 
-    def queen(m, n, inc_i, inc_j):
-        i, j = m, n
+    def queen(i, j, inc_i, inc_j):
         i += inc_i
         j += inc_j
         while (1 <= i <= height and 1 <= j <= width):
@@ -71,15 +72,7 @@ def count_adj2(seats, i, j):
             j += inc_j
         return 0
 
-    T = queen(i, j, -1, 0)
-    B = queen(i, j, +1, 0)
-    L = queen(i, j, 0, -1)
-    R = queen(i, j, 0, +1)
-    TL = queen(i, j, -1, -1)
-    TR = queen(i, j, -1, +1)
-    BL = queen(i, j, +1, -1)
-    BR = queen(i, j, +1, +1)
-    return TL + T + TR + L + R + BL + B + BR
+    return sum([queen(i, j, dx, dy) for (dx, dy) in increments])
 
 def iterate2(seats, tolerance):
     new_seats = copy.deepcopy(seats)
@@ -98,7 +91,7 @@ def iterate2(seats, tolerance):
                     new_seats[i][j] = '#'
     return new_seats
 
-last_room = copy.deepcopy(seats)
+last_room = seats[:]
 i=1
 saved = {}
 while True:
