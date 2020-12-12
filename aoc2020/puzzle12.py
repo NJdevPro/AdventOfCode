@@ -1,5 +1,3 @@
-import itertools as it
-
 lines =  open("puzzle12.txt","r").read().splitlines()
 
 print('----------- Part 1 -----------')
@@ -33,15 +31,10 @@ wp = 10+1j
 
 import cmath
 Pi = 3.1415926535898
-def add_90(pos):
-    rho, phi = cmath.polar(pos)
-    s = cmath.rect(rho, phi + Pi/2)
-    real, im = round(s.real), round(s.imag)
-    return real + im*(0+1j)
 
-def sub_90(pos):
+def add_angle(pos, angle):
     rho, phi = cmath.polar(pos)
-    s = cmath.rect(rho, phi - Pi/2)
+    s = cmath.rect(rho, phi + angle)
     real, im = round(s.real), round(s.imag)
     return real + im*(0+1j)
 
@@ -55,9 +48,9 @@ for step, instruction in enumerate(lines):
         wp += forward[instr] * val
     elif instr == 'L':
         for i in range(int(val/90)):
-            wp = add_90(wp)
+            wp = add_angle(wp, Pi/2.)
     elif instr == 'R':
         for i in range(int(val/90)):
-            wp = sub_90(wp)
+            wp = add_angle(wp, -Pi/2.)
 
 print(step+1, instruction, pos, wp, pos.real + pos.imag)
