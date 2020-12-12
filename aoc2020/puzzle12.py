@@ -25,7 +25,7 @@ for step, instruction in enumerate(lines):
         for i in range(int(val/90)):
             current_dir = right[current_dir]
 
-print(step + 1, pos)
+print(step + 1, pos, pos.real + pos.imag)
 
 print('----------- Part 2 -----------')
 pos = 0+0j
@@ -60,6 +60,4 @@ for step, instruction in enumerate(lines):
         for i in range(int(val/90)):
             wp = sub_90(wp)
 
-    print(step+1, instruction, pos, wp, pos.real + pos.imag)
-
-print(step + 1, pos)
+print(step+1, instruction, pos, wp, pos.real + pos.imag)
