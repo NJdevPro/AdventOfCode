@@ -23,7 +23,6 @@ for line in lines:
         mem[key] = masking(right, mask)
     elif left.startswith('mask'):
         mask = right
-#print(mem)
 print(sum(mem.values()))
 
 print('----------- Part 2 -----------')
@@ -38,15 +37,13 @@ def masking2(val:str, initial_mask: str, mask:str):
     return ''.join(masked)
 
 def list_masks(addr):
-    i = addr.find('X')
-    if i == -1:
+    if addr.find('X') < 0:
         yield addr
     else:
-        yield from list_masks(addr[:i] + '0' + addr[i + 1:])
-        yield from list_masks(addr[:i] + '1' + addr[i + 1:])
+        yield from list_masks(addr.replace('X','0',1))
+        yield from list_masks(addr.replace('X','1',1))
 
 mem = {}
-mask = ''
 for line in lines:
     left, right = line.split('=')
     if left.startswith('mem'):
