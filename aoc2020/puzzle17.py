@@ -78,79 +78,45 @@ for n in range(NITER):
 
 print('----------- Part 2 -----------')
 
-def gen_neighbors():
-    neighbors = []
-    for i in (-1, 0, 1):
-        for j in (-1, 0, 1):
-            for k in (-1, 0, 1):
-                for l in (-1, 0, 1):
-                    neighbors.append((i,j,k,l))
-    neighbors.remove((0,0,0,0))
-    return neighbors
+# Solution by Pataluc https://github.com/pataluc/AoC2020/blob/master/day17.py
+import sys
 
-def mutate(cube, x, y, z, w, xmax, ymax, zmax, wmax):
-    active = 0
-    for (i,j,k,l) in neighbors:
-        if 0 <= x+i < xmax and 0 <= y+j < ymax and 0 <= z+k < zmax and 0 <= w+l < wmax:
-            print(x,y,z,w)
-            if cube[x+i][y+j][z+k][w+l] == '#':
-                active += 1
-    state = cube[x][y][z][w]
-    if state == '#':
-        if (active == 2 or active == 3):
-            pass
-        else:
-            state = '.'
-    elif state == '.' and active == 3:
-        state = '#'
-    return state
+actives = set()
+actives4 = set()
 
-def make_hypercube(side):
-    def make_empty_plane(side):
-        plane = []
-        for i in range(side):
-            plane.append(list('.' * side))
-        return plane
+for x, line in enumerate(lines):
+    for y, cell in enumerate((line.rstrip())):
+        if cell == '#':
+            actives.add((x, y, 0))
+            actives4.add((x, y, 0, 0))
 
-    def make_empty_cube(xx, yy, zz):
-        cube = []
-        for i in range(zz):
-            cube.append(make_empty_plane(xx, yy))
-        return cube
+def neighbours(x, y, z):
+    return set((x + x_offset, y + y_offset, z + z_offset)
+            for x_offset in range(-1, 2)
+            for y_offset in range(-1, 2)
+            for z_offset in range(-1, 2))
 
-    hyperbox = []
-    # make a box large enough for all iterations (be damned with perf)
-    for i in range(int(side/2)):
-        hyperbox.append(make_empty_cube(side, side, side))
+def neighbours4(x, y, z, w):
+    return set((x + x_offset, y + y_offset, z + z_offset, w + w_offset)
+            for x_offset in range(-1, 2)
+            for y_offset in range(-1, 2)
+            for z_offset in range(-1, 2)
+            for w_offset in range(-1, 2))
 
-    hyperbox.append(make_box(side))
+def process(actives, neighbours_function):
+    new_actives = set()
+    for cell in set.union(*[neighbours_function(*cell) for cell in actives]):
+        nb_active_neighours = len(actives & neighbours_function(*cell))
+        if (cell not in new_actives
+            and ((cell in actives and 3 <= nb_active_neighours <= 4)
+            or (cell not in actives and nb_active_neighours == 3))):
+            new_actives.add(cell)
+    return new_actives
 
-    for i in range(int(side/2-1)):
-        hyperbox.append(make_empty_cube(side, side, side))
-    return hyperbox
+for i in range(6):
+    print("Tour %d" % i)
+    actives = process(actives, neighbours)
+    actives4 = process(actives4, neighbours4)
 
-def iterate(hypercube, mutated, n):
-    xxx = len(hypercube[:][:][0])
-    yyy = len(hypercube[:][0])
-    zzz = len(hypercube[0])
-    www = len(hypercube)
-    print(xxx, yyy, zzz, www)
-    count = 0
-    for x in range(xxx):
-        for y in range(yyy):
-            for z in range(zzz):
-                for w in range(www):
-                    state = mutated[x][y][z][w] = mutate(hypercube, x,y,z,w, xxx,yyy,zzz, www)
-                    if state == '#':
-                        count += 1
-    return n, count
-
-
-hypercube = make_box(len(lines[0]) + (2*NITER))
-# for z in range(len(hypercube)):
-#     print(z, hypercube[z])
-neighbors = gen_neighbors()
-mutated = deepcopy(hypercube)
-for n in range(NITER):
-    print(iterate(hypercube, mutated, n))
-    hypercube = deepcopy(mutated)
+print("ex1: %s" % len(actives))
+print("ex2: %s" % len(actives4))
