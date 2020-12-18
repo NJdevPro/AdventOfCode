@@ -79,7 +79,7 @@ for n in range(NITER):
 print('----------- Part 2 -----------')
 
 # Solution by Pataluc https://github.com/pataluc/AoC2020/blob/master/day17.py
-mport sys
+import sys
 
 actives = set()
 actives4 = set()
