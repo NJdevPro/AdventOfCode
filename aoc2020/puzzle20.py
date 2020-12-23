@@ -21,21 +21,18 @@ def read_tiles():
             tiles[tile] = raster
         else:
             raster.append(list(line.strip()))
-    print(tiles)
+    tile = (tile_num, 'N', '')
+    tiles[tile] = raster
     return tiles
 
-def flip_h(tile):
-    new_raster = copy.deepcopy(tiles[tile])
-    new_raster.reverse()
-    new_tile = (tile[0], tile[1], 'h')
-    transform[new_tile] = new_raster
-    return new_tile, new_raster
-
-def flip_v(tile):
-    new_raster = copy.deepcopy(tiles[tile])
-    for row in new_raster:
-        row.reverse()
-    new_tile = (tile[0], tile[1], 'v')
+def flip(tile, axis):
+    new_raster = copy.deepcopy(transform[tile])
+    if axis == 'h':
+        new_raster.reverse()
+    elif axis == 'v':
+        for row in new_raster:
+            row.reverse()
+    new_tile = (tile[0], tile[1], axis)
     transform[new_tile] = new_raster
     return new_tile, new_raster
 
@@ -56,13 +53,13 @@ def rotations(tile_N):
     transform[tile_S] = raster
     tile_W, raster = rotate(tile_S, raster, 'W')
     transform[tile_W] = raster
-    return tile_E, tile_S, tile_W
+    return tile_N, tile_E, tile_S, tile_W
 
 def generate_transforms(tiles):
     for tile in tiles.keys():
         for r in rotations(tile):
-            flip_v(r)
-            flip_h(r)
+            flip(r, 'v')
+            flip(r, 'h')
     # these transforms are congruent to other ones
     transform.pop((tile[0], 'S', 'h'))
     transform.pop((tile[0], 'S', 'v'))
@@ -72,17 +69,21 @@ def generate_transforms(tiles):
 
 match_left = lambda l, r: l[:][-1] == r[:][0]
 match_right = lambda l, r: l[:][0] == r[:][-1]
-match_bottom = lambda b, t: t[-1][:] == b[0][:]
-match_top = lambda b, t: t[0][:] == b[-1][:]
+match_bottom = lambda b, t: t[0] == b[0-1]
+match_top = lambda b, t: t[-1] == b[0]
 
 def border_tiles(match_borders): # upper left corner
     border = set()
+    matches = 0
     for this_tile in transform:
+        #print("This tile: ", this_tile)
         is_border = True
         for tile in transform:
             raster1 = transform[this_tile]
             raster2 = transform[tile]
-            if tile != this_tile and match_borders(raster1, raster2):
+            if tile[0] != this_tile[0] and match_borders(raster1, raster2):
+                matches += 1
+                print(matches, this_tile, tile)
                 is_border = False
                 break
         if is_border:
