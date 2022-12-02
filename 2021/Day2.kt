@@ -36,7 +36,7 @@ class Day2 {
 }
 
 fun main() {
-    val fileName = "C:\\Users\\Nicolas\\IdeaProjects\\AoC\\src\\main\\kotlin\\com\\njdev\\aoc2021\\day2_input.txt"
+    val fileName = "src\\main\\kotlin\\com\\njdev\\aoc2021\\day2_input.txt"
     println("part 1")
     Day2.run(fileName)
     println(Day2.pos.x * Day2.pos.y)
