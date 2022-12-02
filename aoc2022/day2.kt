@@ -33,7 +33,7 @@ fun part1(lines: List<String> ): Int = lines.map{rate(it)}.sum()
 fun part2(lines: List<String> ): Int = lines.map{rate2(it)}.sum()
 
 fun main(){
-    val lines = readFileAsLines("/home/njanin/IdeaProjects/kotlin_dp/src/main/kotlin/AOC2022/input2.txt")
+    val lines = readFileAsLines("kotlin/AOC2022/input2.txt")
     println("Score : ${part1(lines)}")
     println("Score : ${part2(lines)}")
 }
