@@ -21,7 +21,7 @@ fun calories(lines: List<String>): List<Int> {
 fun top3(calories: List<Int>): Int? = calories.sortedDescending().take(3).sum()
 
 fun main(args: Array<String>) {
-    val lines = file2List("C:\\Users\\Nicolas\\IdeaProjects\\untitled1\\src\\main\\kotlin\\input1.txt")
+    val lines = file2List("AOC2022/input1.txt")
     val calories = calories(lines)
     println("Max calories: ${calories.maxOrNull()}")
     println("Top 3 sum: ${top3(calories)}")
