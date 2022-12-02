@@ -79,7 +79,7 @@ class Day4 {
 }
 
 fun main() {
-    val fileName = "C:\\Users\\Nicolas\\IdeaProjects\\AoC\\src\\main\\kotlin\\com\\njdev\\aoc2021\\day4_input.txt"
+    val fileName = "src\\main\\kotlin\\com\\njdev\\aoc2021\\day4_input.txt"
     val d4 = Day4()
 
     println("part 1")
