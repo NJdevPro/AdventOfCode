@@ -58,7 +58,7 @@ class Day3 {
 }
 
 fun main() {
-    val fileName = "C:\\Users\\Nicolas\\IdeaProjects\\AoC\\src\\main\\kotlin\\com\\njdev\\aoc2021\\day3_input.txt"
+    val fileName = "src\\main\\kotlin\\com\\njdev\\aoc2021\\day3_input.txt"
     println("part 1")
     val nums = Day3.readInput(fileName)
     println(Day3.power(nums))
