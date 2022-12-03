@@ -1,27 +1,29 @@
 import java.io.File
 
-fun readInput(fileName: String): List<String> = File(fileName).readLines()
+fun <T> splitEqual(list: List<T>, n: Int): List<List<T>> {
+    val len = list.size / n
+    return list.windowed(size = len, step = len)
+}
 
-fun letter2Val(c: Char): Int = if(c.isLowerCase()) c.code - 'a'.code + 1 else c.code - 'A'.code + 27
+fun priority(c: Char): Int = if(c.isLowerCase()) c.code - 'a'.code + 1 else c.code - 'A'.code + 27
 
 fun line2LetterVal(line: String): Int{
-    val half1 = line.toList().subList(0, line.length / 2)
-    val half2 = line.toList().subList(line.length / 2, line.length)
-    for (c in half1) {
-        val found = half2.filter{it == c};
-        if (found.isNotEmpty()) {return letter2Val(c) }
+    val halves = splitEqual(line.toList(), 2)
+    for (c in halves[0]) {          // could have used intersect like in part 2
+        val found = halves[1].filter{it == c};
+        if (found.isNotEmpty()) {return priority(c) }
     }
     return 0
 }
 
 fun part1(lines: List<String>):Int = lines.map { line2LetterVal(it) }.sum()
 
-fun lines2Val(group:List<String>): Int {
-    val found = group[0].toList().intersect(group[1].toList().intersect(group[2].toList())).last()
-    return letter2Val(found)
+fun lines2Val(block:List<String>): Int {
+    val found = block.map{ it.toSet() }.reduce { a, b -> a.intersect(b) }.first()
+    return priority(found)
 }
 
-fun part2(lines: List<String>):Int = lines.windowed(size = 3, step = 3).map { lines2Val(it) }.sum()
+fun part2(lines: List<String>):Int = lines.windowed(size = 3, step = 3).sumOf { lines2Val(it) }
 
 fun main() {
     val lines = File("src\\main\\kotlin\\input3.txt").readLines()
