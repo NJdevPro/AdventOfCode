@@ -5,8 +5,8 @@ fun readInput(fileName: String): List<String> = File(fileName).readLines()
 fun letter2Val(c: Char): Int = if(c.isLowerCase()) c.code - 'a'.code + 1 else c.code - 'A'.code + 27
 
 fun line2LetterVal(line: String): Int{
-    val half1 = line.toList().subList(0, line.length/2+1)
-    val half2 = line.toList().subList(line.length/2, line.length)
+    val half1 = line.toList().subList(0, line.length / 2)
+    val half2 = line.toList().subList(line.length / 2, line.length)
     for (c in half1) {
         val found = half2.filter{it == c};
         if (found.isNotEmpty()) {return letter2Val(c) }
