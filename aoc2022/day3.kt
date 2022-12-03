@@ -28,7 +28,7 @@ fun part2(lines: List<String>):Int {
 }
 
 fun main() {
-    val filename = "C:\\Users\\Nicolas\\IdeaProjects\\untitled1\\src\\main\\kotlin\\input3.txt"
+    val filename = "src\\main\\kotlin\\input3.txt"
     val lines = readInput(filename)
     println(part1(lines))
     println(part2(lines))
