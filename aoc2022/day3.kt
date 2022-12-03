@@ -14,22 +14,17 @@ fun line2LetterVal(line: String): Int{
     return 0
 }
 
-fun part1(lines: List<String>):Int {
-    return lines.map { line2LetterVal(it) }.sum()
-}
+fun part1(lines: List<String>):Int = lines.map { line2LetterVal(it) }.sum()
 
 fun lines2Val(group:List<String>): Int {
     var found = group[0].toList().intersect(group[1].toList().intersect(group[2].toList())).last()
     return letter2Val(found)
 }
 
-fun part2(lines: List<String>):Int {
-    return lines.windowed(size = 3, step = 3).map { lines2Val(it) }.sum()
-}
+fun part2(lines: List<String>):Int = lines.windowed(size = 3, step = 3).map { lines2Val(it) }.sum()
 
 fun main() {
-    val filename = "src\\main\\kotlin\\input3.txt"
-    val lines = readInput(filename)
+    val lines = File("src\\main\\kotlin\\input3.txt").readLines()
     println(part1(lines))
     println(part2(lines))
 }
