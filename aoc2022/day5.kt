@@ -34,14 +34,12 @@ class Day5 {
         val regex = "move (\\d+) from (\\d+) to (\\d+)".toRegex()
         moves.forEach {
             val (qty, from, to) = regex.find(it)!!.destructured.toList().map { it.toInt() }
-            val before = stacks[from-1].size + stacks[to-1].size
-            val after = method(stacks, from, to, qty)
-            assert(after == before)
+            method(stacks, from, to, qty)
         }
         return stacks.map { it.lastOrNull() }.joinToString()
     }
 
-    //fun part1(lines: List<String>) : String = solution(lines, ::moveOneByOne)
+    fun part1(lines: List<String>) : String = solution(lines, ::moveOneByOne)
 
     fun part2(lines: List<String>) : String = solution(lines, ::moveBySubstack)
 }
