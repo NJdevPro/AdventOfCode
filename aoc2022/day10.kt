@@ -25,16 +25,17 @@ class Day10 {
         if(clock % 40 == 0) println()
     }
 
+     fun update() {            
+        printPix(clock, cycles[clock]!!)
+        clock++
+    }
+    
     fun draw(line: String) : Unit {
         if (line.startsWith ("noop")) {
-            printPix(clock, cycles[clock]!!)
-            clock++
+            update()
         }
         else if (line.startsWith("addx")) {
-            printPix(clock, cycles[clock]!!)
-            clock++
-            printPix(clock, cycles[clock]!!)
-            clock++
+            (1..2).forEach { update() }
         }
     }
 
