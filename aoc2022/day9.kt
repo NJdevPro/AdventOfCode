@@ -18,27 +18,6 @@ class Day9 {
     var H = Pos(0,0)
     var T = Pos(0, 0)
 
-    fun draw() {
-        val xmin = node.map{it.x}.min() - 4
-        val xmax = node.map{it.x}.max() + 4
-        val ymin = node.map{it.y}.min() - 4
-        val ymax = node.map{it.y}.max() + 4
-            for (y in ymin..ymax) {
-                for (x in xmin..xmax) {
-                    for (i in 0..8) {
-                        H = node[i]
-                        T = node[i + 1]
-                        if (Pos(x, y) == H) print(i)
-                        else if (Pos(x, y) == T) print(i + 1)
-                        if (Pos(x, y) == Pos(0, 0)) print("s")
-                        else print(".")
-                    }
-                }
-                println()
-            }
-            println()
-    }
-
     fun follow (H: Pos, T: Pos) : Pos {
         val dist = H - T
         var T2 = T
@@ -64,15 +43,13 @@ class Day9 {
         return visited
     }
 
-    var node: Array<Pos> = Array(size=10, init = { Pos(0,0)})
-
-    fun moveRope(move: String, n:Int) : Set<Pos> {
+    fun moveRope(move: String, node: Array<Pos>) : Set<Pos> {
         var visited : MutableSet<Pos> = mutableSetOf()
         move.split(' ').let { (dir, steps) ->
             for(step in 1..steps.toInt()) {
                 node[0] = node[0] + Pos.move[dir]    // move head, compiler bug against +=
                 H = node[0]
-                for (i in 0..n-2) {
+                for (i in 0..node.size-2) {
                     node[i+1] = follow(node[i], node[i+1])
                 }
                 T = node.last()
@@ -94,9 +71,10 @@ class Day9 {
 
     fun part2(lines: List<String>) : Int {
         var positions : MutableSet<Pos> = mutableSetOf()
+        var knots: Array<Pos> = Array(size=10, init = { Pos(0,0)})
         lines.forEachIndexed{ step, move ->
             //println("Step" + step + " - "+ move);
-            positions.addAll(moveRope(move, 10));
+            positions.addAll(moveRope(move, knots));
         }
         return positions.size
     }
