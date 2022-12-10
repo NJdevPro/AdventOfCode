@@ -2,13 +2,13 @@ import java.io.File
 
 fun <T> splitEqual(list: List<T>, n: Int): List<List<T>> {
     val len = list.size / n
-    return list.windowed(size = len, step = len)
+    return list.windowed(size = len, step = len)  // could have used chunked() instead
 }
 
-fun priority(c: Char): Int = if(c.isLowerCase()) c.code - 'a'.code + 1 else c.code - 'A'.code + 27
+fun priority(c: Char): Int = if(c.isLowerCase()) c - 'a' + 1 else c - 'A' + 27
 
 fun line2LetterVal(line: String): Int{
-    val halves = splitEqual(line.toList(), 2)
+    val halves = splitEqual(line.toList(), 2) 
     for (c in halves[0]) {          // could have used intersect like in part 2
         val found = halves[1].filter{it == c};
         if (found.isNotEmpty()) {return priority(c) }
