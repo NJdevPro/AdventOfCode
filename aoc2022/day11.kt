@@ -88,7 +88,7 @@ class Day11 {
 
     fun part2(lines: List<String>  ): ULong {
         monkeys.clear()
-        return monkeyBusiness(lines, 10000, { n : ULong -> n / Day11.lcm })
+        return monkeyBusiness(lines, 10000, { n : ULong -> n % Day11.lcm })
     }
 }
 
