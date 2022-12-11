@@ -64,15 +64,11 @@ class Day11 {
             }
         }
         val sortedByInspected = monkeys.map { it.inspected.toULong() }.sorted().takeLast(2)
-        println(sortedByInspected)
         return sortedByInspected[0] * sortedByInspected[1]
     }
 
     fun parse(lines: List<String>): List<Monkey> {
-        var numChunk = 0
-        val chunks = lines
-            .chunked(7)
-            .map { it.filter { it.isNotBlank() } }
+        val chunks = lines.chunked(7).map { it.filter { it.isNotBlank() } }
         for(chunk in chunks) {
             val monkey = Monkey(
                 chunk[1].substring(18).split(',').map { it.trim().toULong() }.toMutableList(),
