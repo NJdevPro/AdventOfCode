@@ -37,67 +37,29 @@ class Day12 {
     val edges : Array<Tile> = arrayOf( Tile(1, 0), Tile(0, -1), Tile(-1, 0), Tile(0,1) )
 
     // https://en.m.wikipedia.org/wiki/Breadth-first_search
-    fun bfs(m : grid, start : Tile, end: Tile) : Tile {
+    fun bfs(m : grid, start : Tile, destination : (Tile) -> Boolean,
+            constraint : (a: Int, b: Int) -> Boolean) : Tile {
         var queue : ArrayDeque<Tile> = ArrayDeque()
         var visited: Array<Array<Boolean>> = Array(m.size) { Array(m[0].size) { false } }
         visited[start.i][start.j] = true
         queue.addFirst(start)
         while(queue.isNotEmpty()) {
             val v = queue.removeLast()
-            if (v.equals(end)) { return v }
+            if (destination(v)) { return v }
             edges.forEach {
                 val i = v.i + it.i
                 val j = v.j + it.j
                 var c = Tile(i, j)
                 if( c within m && !visited[i][j]
-                    && ( m[i][j] - m[v.i][v.j] <= 1) ){
-                        visited[i][j] = true
-                        c.prev = v
-                        queue.addFirst(c)
+                    && constraint( m[i][j], m[v.i][v.j]) ){
+                    visited[i][j] = true
+                    c.prev = v
+                    queue.addFirst(c)
                 }
             }
         }
-        println("No path found from $start to $end !")
+        println("No path found from $start to destination !")
         return start
-    }
-
-    fun solve(m: grid, S: Char, E: Char) : Int {
-        var start: Tile = Tile(0, 0)
-        var end: Tile = Tile(0, 0)
-
-        for (i in m.indices) {
-            for (j in m[0].indices) {
-                if (m[i][j] == S - 'a') {
-                    start = Tile(i, j)
-                    m[i][j] = 0
-                }
-                else if (m[i][j] == E - 'a') {
-                    end = Tile(i, j)
-                    m[i][j] = 'z' - 'a'
-                }
-            }
-        }
-        //printMap(m)
-        return backtrack(bfs(m, start, end)).size
-    }
-
-    fun solve2(m: grid, S: Char, E: Char) : List<Int> {
-        var starts: MutableList<Tile> = mutableListOf()
-        var end: Tile = Tile(0, 0)
-
-        for (i in m.indices) {
-            for (j in m[0].indices) {
-                if (m[i][j] == S - 'a') {
-                    starts.add(Tile(i, j))
-                    m[i][j] = 0
-                }
-                else if (m[i][j] == E - 'a') {
-                    end = Tile(i, j)
-                    m[i][j] = 'z' - 'a'
-                }
-            }
-        }
-        return starts.map{ backtrack(bfs(m, it, end)).size }
     }
 
     fun backtrack(t: Tile) : List<Tile> {
@@ -110,17 +72,26 @@ class Day12 {
         return path.reversed()
     }
 
+    fun find( searched: Int, map: grid) : Tile {
+        map.mapIndexed { row, chars -> chars.mapIndexed {col, char -> if (char == searched) return Tile(row, col) } }
+        throw IllegalArgumentException("There is no such hill int he map")
+    }
+
     fun part1(lines: List<String> ): Int {
         val map = readMap(lines)
         //printMap(map)
-        return solve(map, 'S', 'E')
+        val start = find('S' - 'a', map)
+        map[start.i][start.j] = 0
+        val end = find('E' - 'a', map)
+        map[end.i][end.j] = 'z' - 'a'
+        return backtrack( bfs(map, start, { t : Tile -> t == end}) {a: Int, b : Int -> a - b <= 1 } ).size
     }
 
     fun part2(lines: List<String>  ): Int {
         val map = readMap(lines)
-        //printMap(map)
-        return solve2(map, 'a', 'E').min()
-
+        val start = find('E' - 'a', map)
+        map[start.i][start.j] = 'z' - 'a'
+        return backtrack( bfs(map, start, { t : Tile -> map[t.i][t.j] == 0}) {a: Int, b : Int -> b - a <= 1 } ).size
     }
 }
 
